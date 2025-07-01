@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "402031348513",
+    "project_id": "thinksync-50665",
+    "storage_bucket": "thinksync-50665.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:402031348513:android:ecdae6d9d7c8cf18058c60",
+        "android_client_info": {
+          "package_name": "com.example.finalthinksync"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDohOv_8KMeI7GYwVP7EuOUEFJxMzKkcQo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:402031348513:android:2cc62301e6b791c9058c60",
+        "android_client_info": {
+          "package_name": "com.example.thinksync"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDohOv_8KMeI7GYwVP7EuOUEFJxMzKkcQo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">FinalThinkSync</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="title">Title</string>
+    <string name="course">Course</string>
+    <string name="lecturer">Lecturer</string>
+    <string name="year">Year</string>
+    <string name="upload_summary">Upload Summary</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="register">register</string>
+    <string name="hello_user">Hello User!</string>
+    <string name="choose_pdf_file">Choose PDF file</string>
+</resources>
