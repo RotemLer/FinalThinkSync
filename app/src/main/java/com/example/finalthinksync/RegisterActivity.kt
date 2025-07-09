@@ -1,5 +1,6 @@
 package com.example.finalthinksync
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -39,7 +40,10 @@ class RegisterActivity : AppCompatActivity() {
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener {
                     Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
-                    finish() // חזרה למסך הקודם
+
+                    // ✅ מעבירים ישר למסך הסיכומים
+                    startActivity(Intent(this, FragmentSummaryListActivity::class.java))
+                    finish()
                 }
                 .addOnFailureListener { error ->
                     Toast.makeText(this, "Registration failed: ${error.message}", Toast.LENGTH_LONG).show()

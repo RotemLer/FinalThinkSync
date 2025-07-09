@@ -6,9 +6,13 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.firestore.Query
+
 
 class FragmentSummaryUploadActivity : AppCompatActivity() {
 
@@ -27,6 +31,8 @@ class FragmentSummaryUploadActivity : AppCompatActivity() {
         val yearEditText = findViewById<EditText>(R.id.summary_upload_TEXT_Year)
         val uploadButton = findViewById<Button>(R.id.summary_upload_BTN_Upload)
         val choosePdfButton = findViewById<Button>(R.id.summary_upload_BTN_PDF)
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val uploaderUid = currentUser?.uid ?: ""
 
         choosePdfButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
@@ -50,10 +56,15 @@ class FragmentSummaryUploadActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val cleanTitle = title.replace(Regex("[^a-zA-Z0-9_\\-]"), "_")
-            val fileName = "summaries/${System.currentTimeMillis()}_${title}.pdf"
-            val fileRef = storage.reference.child(fileName)
+            val currentUser = FirebaseAuth.getInstance().currentUser
+            if (currentUser == null) {
+                Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
+            val uploaderUid = currentUser.uid
+            val fileName = "summaries/${System.currentTimeMillis()}_${title.replace(Regex("[^a-zA-Z0-9_\\-]"), "_")}.pdf"
+            val fileRef = storage.reference.child(fileName)
 
             try {
                 val inputStream = contentResolver.openInputStream(selectedPdfUri!!)
@@ -65,20 +76,20 @@ class FragmentSummaryUploadActivity : AppCompatActivity() {
                 val fileBytes = inputStream.readBytes()
                 inputStream.close()
 
-                Log.d("UploadDebug", "Uploading ${fileBytes.size} bytes to $fileName")
                 Toast.makeText(this, "Uploading the file...", Toast.LENGTH_SHORT).show()
+                Log.d("UploadDebug", "Uploading ${fileBytes.size} bytes to $fileName")
 
                 fileRef.putBytes(fileBytes)
                     .addOnSuccessListener {
-                        Log.d("UploadDebug", "File uploaded successfully.")
                         fileRef.downloadUrl.addOnSuccessListener { uri ->
                             val summaryData = hashMapOf(
                                 "title" to title,
                                 "course" to course,
                                 "lecturer" to lecturer,
-                                "year" to year,
+                                "year" to year.toInt(),
                                 "pdfUrl" to uri.toString(),
-                                "timestamp" to System.currentTimeMillis()
+                                "timestamp" to com.google.firebase.firestore.FieldValue.serverTimestamp(),
+                                "uploaderUid" to uploaderUid
                             )
 
                             db.collection("summaries")
@@ -106,7 +117,9 @@ class FragmentSummaryUploadActivity : AppCompatActivity() {
 
 
 
+
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        bottomNav.selectedItemId = R.id.nav_upload
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {

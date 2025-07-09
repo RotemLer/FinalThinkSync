@@ -1,0 +1,64 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SummaryDetailsActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_navigation">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/item_summary_TV_Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Summary Title"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/item_summary_TV_Course"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Course Name" />
+
+            <TextView
+                android:id="@+id/item_summary_TV_Lecturer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lecturer Name" />
+
+            <Button
+                android:id="@+id/item_summary_BTN_Open"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="📄 Open PDF"
+                android:layout_marginTop="16dp" />
+
+            <FrameLayout
+                android:id="@+id/pdfContainer"
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:layout_marginTop="16dp"/>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:menu="@menu/bottom_nav_menu"
+        android:background="?android:attr/windowBackground" />
+</RelativeLayout>
