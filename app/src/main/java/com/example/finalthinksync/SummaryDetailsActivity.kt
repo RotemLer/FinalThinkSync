@@ -4,13 +4,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class SummaryDetailsActivity : AppCompatActivity() {
 
@@ -23,11 +22,24 @@ class SummaryDetailsActivity : AppCompatActivity() {
         val lecturerText = findViewById<TextView>(R.id.item_summary_TV_Lecturer)
         val openPdfButton = findViewById<Button>(R.id.item_summary_BTN_Open)
         val pdfContainer = findViewById<FrameLayout>(R.id.pdfContainer)
+        val btnReview = findViewById<Button>(R.id.btn_write_review)
 
+
+        val summaryId = intent.getStringExtra("summaryId") ?: ""
+        val uploaderUid = intent.getStringExtra("uploaderUid") ?: ""
+        val currentUid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
         val title = intent.getStringExtra("title") ?: "Unknown Title"
         val course = intent.getStringExtra("course") ?: "Unknown Course"
         val lecturer = intent.getStringExtra("lecturer") ?: "Unknown Lecturer"
         val pdfUrl = intent.getStringExtra("pdfUrl")
+
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+        val savedRef = FirebaseFirestore.getInstance()
+            .collection("users")
+            .document(userId)
+            .collection("saved_summaries")
+            .document(summaryId)
+
 
         titleText.text = title
         courseText.text = course
@@ -70,5 +82,111 @@ class SummaryDetailsActivity : AppCompatActivity() {
                 else -> false
             }
         }
+
+        btnReview.setOnClickListener {
+            showReviewDialog(summaryId)
+        }
+
+
+        // ✅ Load all reviews dynamically
+        val reviewContainer = findViewById<LinearLayout>(R.id.reviewContainer)
+
+        FirebaseFirestore.getInstance()
+            .collection("summaries")
+            .document(summaryId)
+            .collection("reviews")
+            .get()
+            .addOnSuccessListener { result ->
+                for (doc in result) {
+                    val review = doc.toObject(Review::class.java)
+                    val reviewId = doc.id
+
+                    val reviewLayout = LinearLayout(this).apply {
+                        orientation = LinearLayout.VERTICAL
+                        setPadding(0, 0, 0, 32)
+                    }
+
+                    val reviewText = TextView(this).apply {
+                        text = "By ${review.username} (${review.rating}⭐):\n${review.text}"
+                        textSize = 16f
+                    }
+                    reviewLayout.addView(reviewText)
+
+                    if (!review.reply.isNullOrEmpty()) {
+                        val replyText = TextView(this).apply {
+                            text = "Uploader's reply:\n${review.reply}"
+                            textSize = 14f
+                        }
+                        reviewLayout.addView(replyText)
+                    }
+
+                    if (currentUid == uploaderUid && review.reply.isNullOrEmpty()) {
+                        val replyInput = EditText(this).apply {
+                            hint = "Write a reply..."
+                        }
+
+                        val sendReplyBtn = Button(this).apply {
+                            text = "Send Reply"
+                            setOnClickListener {
+                                val replyText = replyInput.text.toString()
+                                if (replyText.isNotBlank()) {
+                                    FirebaseFirestore.getInstance()
+                                        .collection("summaries")
+                                        .document(summaryId)
+                                        .collection("reviews")
+                                        .document(reviewId)
+                                        .update("reply", replyText)
+                                        .addOnSuccessListener {
+                                            Toast.makeText(this@SummaryDetailsActivity, "Reply sent", Toast.LENGTH_SHORT).show()
+                                            recreate()
+                                        }
+                                }
+                            }
+                        }
+
+                        reviewLayout.addView(replyInput)
+                        reviewLayout.addView(sendReplyBtn)
+                    }
+
+                    reviewContainer.addView(reviewLayout)
+                }
+            }
+    }
+
+    private fun showReviewDialog(summaryId: String) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_write_review, null)
+        val editText = dialogView.findViewById<EditText>(R.id.reviewEditText)
+        val ratingBar = dialogView.findViewById<RatingBar>(R.id.ratingBar)
+
+        AlertDialog.Builder(this)
+            .setTitle("Write review")
+            .setView(dialogView)
+            .setPositiveButton("Send") { _, _ ->
+                val reviewText = editText.text.toString()
+                val rating = ratingBar.rating.toInt()
+
+                val user = FirebaseAuth.getInstance().currentUser
+                val review = Review(
+                    userId = user?.uid ?: "",
+                    username = user?.email ?: "anonymous user",
+                    rating = rating,
+                    text = reviewText
+                )
+
+                FirebaseFirestore.getInstance()
+                    .collection("summaries")
+                    .document(summaryId)
+                    .collection("reviews")
+                    .add(review)
+                    .addOnSuccessListener {
+                        Toast.makeText(this, "Review saved", Toast.LENGTH_SHORT).show()
+                        recreate()
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(this, "Error sending review", Toast.LENGTH_SHORT).show()
+                    }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 }

@@ -54,9 +54,12 @@ class ProfileActivity : AppCompatActivity() {
         savedRecyclerView.addItemDecoration(
             DividerItemDecoration(this, LinearLayoutManager.VERTICAL)
         )
+        Log.d("Debug", "Current UID: $userUid")
 
         if (userUid != null) {
+            Log.d("Debug", "Calling loadUploadedSummaries with UID: $userUid")
             loadUploadedSummaries(userUid)
+            Log.d("Debug", "Calling loadSavedSummaries with UID: $userUid")
             loadSavedSummaries(userUid)
         } else {
             Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
@@ -83,30 +86,62 @@ class ProfileActivity : AppCompatActivity() {
     private fun loadUploadedSummaries(uid: String) {
         db.collection("summaries")
             .whereEqualTo("uploaderUid", uid)
-            .orderBy("timestamp", Query.Direction.DESCENDING)
             .get()
             .addOnSuccessListener { result ->
-                val uploadedSummaries = result.map { doc ->
-                    Summary(
+                Log.d("Debug", "Found ${result.size()} summaries")
+
+                val summaries = mutableListOf<Summary>()
+
+                for (doc in result) {
+                    val timestampObj = doc.getTimestamp("timestamp")
+                    val timestampLong = timestampObj?.seconds ?: 0L
+
+                    val summary = Summary(
                         id = doc.id,
                         title = doc.getString("title") ?: "",
                         course = doc.getString("course") ?: "",
                         lecturer = doc.getString("lecturer") ?: "",
-                        year = doc.getString("year")?.toIntOrNull() ?: 0,
+                        year = (doc.getLong("year") ?: 0L).toInt(),
                         pdfUrl = doc.getString("pdfUrl") ?: "",
-                        timestamp = doc.getLong("timestamp") ?: 0L,
-                        uploaderUid = uid
+                        timestamp = timestampLong,
+                        uploaderUid = doc.getString("uploaderUid") ?: ""
                     )
+
+                    db.collection("summaries")
+                        .document(summary.id)
+                        .collection("reviews")
+                        .get()
+                        .addOnSuccessListener { reviewDocs ->
+                            val reviewList = reviewDocs.mapNotNull { it.toObject(Review::class.java) }
+                            summary.reviews = reviewList
+
+                            Log.d("Debug", "Loaded ${reviewList.size} reviews for ${summary.title}")
+                            summaries.add(summary)
+
+                            if (summaries.size == result.size()) {
+                                val adapter = SummaryAdapter(showSaveButton = false)
+                                uploadedRecyclerView.adapter = adapter
+                                adapter.submitList(summaries)
+                            }
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("FirestoreError", "Failed to load reviews for ${summary.id}: ${e.message}")
+                            summaries.add(summary)
+                            if (summaries.size == result.size()) {
+                                val adapter = SummaryAdapter(showSaveButton = false)
+                                uploadedRecyclerView.adapter = adapter
+                                adapter.submitList(summaries)
+                            }
+                        }
                 }
-                val adapter = SummaryAdapter(showSaveButton = false)
-                uploadedRecyclerView.adapter = adapter
-                adapter.submitList(uploadedSummaries)
             }
             .addOnFailureListener { e ->
                 Log.e("FirestoreError", "Failed to load uploaded summaries: ${e.message}")
                 Toast.makeText(this, "Failed to load uploaded summaries", Toast.LENGTH_SHORT).show()
             }
     }
+
+
 
     private fun loadSavedSummaries(uid: String) {
         val userRef = db.collection("users").document(uid)
@@ -125,17 +160,21 @@ class ProfileActivity : AppCompatActivity() {
                 .get()
                 .addOnSuccessListener { result ->
                     val savedSummaries = result.map { doc ->
+                        val timestampObj = doc.getTimestamp("timestamp")
+                        val timestampLong = timestampObj?.seconds ?: 0L
+
                         Summary(
                             id = doc.id,
                             title = doc.getString("title") ?: "",
                             course = doc.getString("course") ?: "",
                             lecturer = doc.getString("lecturer") ?: "",
-                            year = doc.getString("year")?.toIntOrNull() ?: 0,
+                            year = (doc.getLong("year") ?: 0L).toInt(),
                             pdfUrl = doc.getString("pdfUrl") ?: "",
-                            timestamp = doc.getLong("timestamp") ?: 0L,
+                            timestamp = timestampLong,
                             uploaderUid = doc.getString("uploaderUid") ?: ""
                         )
                     }
+
                     val adapter = SummaryAdapter(showSaveButton = false)
                     savedRecyclerView.adapter = adapter
                     adapter.submitList(savedSummaries)
@@ -148,4 +187,7 @@ class ProfileActivity : AppCompatActivity() {
             Log.e("FirestoreError", "Failed to load user data: ${e.message}")
         }
     }
+
+
+
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -21,6 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Course Name"
+        android:layout_below="@id/item_summary_TV_Title"
         android:textColor="#333333"
         android:layout_marginTop="4dp" />
 
@@ -29,6 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Lecturer Name"
+        android:layout_below="@id/item_summary_TV_Course"
         android:textColor="#666666"
         android:layout_marginTop="2dp" />
 
@@ -37,5 +39,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="💾 Save"
+        android:layout_below="@id/item_summary_TV_Lecturer"
         android:layout_marginTop="8dp"/>
-</LinearLayout>
+
+    <TextView
+        android:id="@+id/item_summary_TV_Reviews"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_below="@id/item_summary_BTN_Save"
+        android:textSize="14sp"
+        android:paddingTop="8dp"
+        android:visibility="gone"
+        />
+
+
+
+</RelativeLayout>

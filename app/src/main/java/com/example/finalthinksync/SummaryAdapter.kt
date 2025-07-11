@@ -6,14 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
 
 class SummaryAdapter(private val showSaveButton: Boolean = true) :
     ListAdapter<Summary, SummaryAdapter.SummaryViewHolder>(SummaryDiffCallback()) {
@@ -22,8 +18,10 @@ class SummaryAdapter(private val showSaveButton: Boolean = true) :
         val titleText: TextView = itemView.findViewById(R.id.item_summary_TV_Title)
         val courseText: TextView = itemView.findViewById(R.id.item_summary_TV_Course)
         val lecturerText: TextView = itemView.findViewById(R.id.item_summary_TV_Lecturer)
-        val saveButton: Button = itemView.findViewById(R.id.item_summary_BTN_Save)
+        val reviewsText: TextView = itemView.findViewById(R.id.item_summary_TV_Reviews)
+        val saveButton: Button = itemView.findViewById(R.id.item_summary_BTN_Save) // ← הוספה חשובה
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SummaryViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -40,6 +38,8 @@ class SummaryAdapter(private val showSaveButton: Boolean = true) :
         holder.itemView.setOnClickListener {
             val context = holder.itemView.context
             val intent = Intent(context, SummaryDetailsActivity::class.java).apply {
+                putExtra("summaryId", summary.id)
+                putExtra("uploaderUid", summary.uploaderUid)
                 putExtra("title", summary.title)
                 putExtra("course", summary.course)
                 putExtra("lecturer", summary.lecturer)
@@ -48,31 +48,27 @@ class SummaryAdapter(private val showSaveButton: Boolean = true) :
             context.startActivity(intent)
         }
 
+        if (summary.reviews.isNotEmpty()) {
+            val reviewText = summary.reviews.joinToString("\n\n") {
+                "By ${it.username} (${it.rating}⭐):\n${it.text}"
+            }
+            holder.reviewsText.text = reviewText
+            holder.reviewsText.visibility = View.VISIBLE
+        } else {
+            holder.reviewsText.text = ""
+            holder.reviewsText.visibility = View.GONE
+        }
+
         if (showSaveButton) {
             holder.saveButton.visibility = View.VISIBLE
             holder.saveButton.setOnClickListener {
-                val currentUser = FirebaseAuth.getInstance().currentUser
-                if (currentUser != null) {
-                    val userRef = FirebaseFirestore.getInstance().collection("users").document(currentUser.uid)
-
-                    userRef.get().addOnSuccessListener { doc ->
-                        if (!doc.contains("savedSummaries")) {
-                            userRef.set(mapOf("savedSummaries" to listOf<String>()), SetOptions.merge())
-                        }
-                        userRef.update("savedSummaries", FieldValue.arrayUnion(summary.id))
-                            .addOnSuccessListener {
-                                Toast.makeText(holder.itemView.context, "Saved successfully", Toast.LENGTH_SHORT).show()
-                            }
-                            .addOnFailureListener {
-                                Toast.makeText(holder.itemView.context, "An error occurred", Toast.LENGTH_SHORT).show()
-                            }
-                    }
-                }
+                // TODO: Implement save logic
             }
         } else {
             holder.saveButton.visibility = View.GONE
         }
     }
+
 }
 
 class SummaryDiffCallback : DiffUtil.ItemCallback<Summary>() {

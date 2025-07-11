@@ -5,7 +5,10 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -19,7 +22,8 @@ class FragmentSummaryListActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: SummaryAdapter
-    private lateinit var filterEditText: EditText
+    private lateinit var filterEditText: AutoCompleteTextView
+
     private var fullSummaryList: List<Summary> = listOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +44,11 @@ class FragmentSummaryListActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
 
         loadSummariesFromFirestore()
+        loadCourseNamesForDropdown()
+        filterEditText.setOnClickListener {
+            filterEditText.showDropDown()
+        }
+
 
         filterEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -86,7 +95,7 @@ class FragmentSummaryListActivity : AppCompatActivity() {
                             is String -> rawYear.toIntOrNull() ?: 0
                             else -> 0
                         }
-                        val timestamp = doc.getLong("timestamp") ?: 0L
+                        val timestamp = doc.getTimestamp("timestamp")?.seconds ?: 0L
                         val uploaderUid = doc.getString("uploaderUid") ?: ""
                         val pdfUrl = doc.getString("pdfUrl") ?: ""
 
@@ -114,5 +123,23 @@ class FragmentSummaryListActivity : AppCompatActivity() {
         }
         adapter.submitList(filteredList)
     }
+
+    private fun loadCourseNamesForDropdown() {
+        val db = FirebaseFirestore.getInstance()
+        db.collection("summaries")
+            .get()
+            .addOnSuccessListener { result ->
+                val courseNames = result.mapNotNull { it.getString("course") }
+                    .distinct()
+                    .sorted()
+
+                val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, courseNames)
+                (filterEditText as? AutoCompleteTextView)?.setAdapter(adapter)
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Unable to load courses 🔌", Toast.LENGTH_SHORT).show()
+            }
+    }
+
 
 }

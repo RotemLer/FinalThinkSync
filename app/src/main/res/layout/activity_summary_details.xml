@@ -7,6 +7,7 @@
     tools:context=".SummaryDetailsActivity">
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_navigation">
@@ -44,13 +45,28 @@
                 android:text="📄 Open PDF"
                 android:layout_marginTop="16dp" />
 
+            <Button
+                android:id="@+id/btn_write_review"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="📝 Write review" />
+
+
             <FrameLayout
                 android:id="@+id/pdfContainer"
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
+                android:layout_height="400dp"
                 android:layout_marginTop="16dp"/>
 
-
+            <LinearLayout
+                android:id="@+id/reviewContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
+                android:padding="8dp" />
         </LinearLayout>
     </ScrollView>
 

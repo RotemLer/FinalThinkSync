@@ -8,6 +8,7 @@ data class Summary(
     val year: Int = 0,
     val timestamp: Long = 0L,
     val uploaderUid: String = "",
-    val pdfUrl: String = ""
+    val pdfUrl: String = "",
+    var reviews: List<Review> = emptyList()
 
 )
