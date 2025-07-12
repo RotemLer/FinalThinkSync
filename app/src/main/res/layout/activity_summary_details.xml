@@ -4,7 +4,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SummaryDetailsActivity">
+    tools:context=".SummaryDetailsActivity"
+    android:background="@color/gray_bg">
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -76,5 +77,5 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         app:menu="@menu/bottom_nav_menu"
-        android:background="?android:attr/windowBackground" />
+        android:background="@color/gray_bg" />
 </RelativeLayout>
