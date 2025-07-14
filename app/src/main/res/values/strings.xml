@@ -12,4 +12,11 @@
     <string name="register">register</string>
     <string name="hello_user">Hello User!</string>
     <string name="choose_pdf_file">Choose PDF file</string>
+
+    <string-array name="filter_types">
+        <item>Course</item>
+        <item>Year</item>
+        <item>Lecturer</item>
+    </string-array>
+
 </resources>

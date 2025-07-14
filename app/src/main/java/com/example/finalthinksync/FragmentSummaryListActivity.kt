@@ -5,12 +5,8 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.EditText
-import android.widget.Spinner
-import android.widget.TextView
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,7 +18,8 @@ class FragmentSummaryListActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: SummaryAdapter
-    private lateinit var filterEditText: AutoCompleteTextView
+    private lateinit var filterTypeSpinner: Spinner
+    private lateinit var filterValueInput: AutoCompleteTextView
 
     private var fullSummaryList: List<Summary> = listOf()
 
@@ -36,27 +33,16 @@ class FragmentSummaryListActivity : AppCompatActivity() {
         val welcomeTextView = findViewById<TextView>(R.id.summary_list_TV_Welcome)
         welcomeTextView.text = "Hello, $email!"
 
-        filterEditText = findViewById(R.id.summary_list_ET_FilterCourse)
+        filterTypeSpinner = findViewById(R.id.spinner_filter_type)
+        filterValueInput = findViewById(R.id.summary_list_ET_FilterValue)
         recyclerView = findViewById(R.id.summary_list_RV_Summaries)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         adapter = SummaryAdapter()
         recyclerView.adapter = adapter
 
+        setupFilterTypeSpinner()
         loadSummariesFromFirestore()
-        loadCourseNamesForDropdown()
-        filterEditText.setOnClickListener {
-            filterEditText.showDropDown()
-        }
-
-
-        filterEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                updateList(s.toString())
-            }
-            override fun afterTextChanged(s: Editable?) {}
-        })
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomNav.selectedItemId = R.id.nav_home
@@ -108,38 +94,69 @@ class FragmentSummaryListActivity : AppCompatActivity() {
 
                 fullSummaryList = summaries
                 adapter.submitList(fullSummaryList)
+                refreshSuggestions()
             }
             .addOnFailureListener {
                 Toast.makeText(this, "Failed to load summaries", Toast.LENGTH_SHORT).show()
             }
     }
 
+    private fun setupFilterTypeSpinner() {
+        val filterOptions = resources.getStringArray(R.array.filter_types)
+        val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, filterOptions)
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        filterTypeSpinner.adapter = spinnerAdapter
 
+        filterTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                refreshSuggestions()
+            }
 
-    private fun updateList(filterText: String) {
-        Log.d("Filter", "Filtering by: $filterText")
-        val filteredList = fullSummaryList.filter {
-            it.course.contains(filterText, ignoreCase = true)
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
+
+        filterValueInput.setOnClickListener {
+            filterValueInput.showDropDown()
+        }
+
+        filterValueInput.setOnItemClickListener { _, _, position, _ ->
+            val selectedValue = filterValueInput.adapter.getItem(position).toString()
+            applyFilter(filterTypeSpinner.selectedItem.toString(), selectedValue)
+        }
+
+        filterValueInput.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val typed = s.toString()
+                applyFilter(filterTypeSpinner.selectedItem.toString(), typed)
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
+
+    private fun refreshSuggestions() {
+        if (fullSummaryList.isEmpty()) return
+
+        val selected = filterTypeSpinner.selectedItem.toString()
+        val suggestions = when (selected) {
+            "Course" -> fullSummaryList.map { it.course }.distinct().sorted()
+            "Year" -> fullSummaryList.map { it.year.toString() }.distinct().sorted()
+            "Lecturer" -> fullSummaryList.map { it.lecturer }.distinct().sorted()
+            else -> listOf()
+        }
+
+        val adapterSuggestions = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, suggestions)
+        filterValueInput.setAdapter(adapterSuggestions)
+        filterValueInput.setText("")
+    }
+
+    private fun applyFilter(filterType: String, value: String) {
+        val filteredList = when (filterType) {
+            "Course" -> fullSummaryList.filter { it.course.contains(value, ignoreCase = true) }
+            "Year" -> fullSummaryList.filter { it.year.toString().contains(value) }
+            "Lecturer" -> fullSummaryList.filter { it.lecturer.contains(value, ignoreCase = true) }
+            else -> fullSummaryList
         }
         adapter.submitList(filteredList)
     }
-
-    private fun loadCourseNamesForDropdown() {
-        val db = FirebaseFirestore.getInstance()
-        db.collection("summaries")
-            .get()
-            .addOnSuccessListener { result ->
-                val courseNames = result.mapNotNull { it.getString("course") }
-                    .distinct()
-                    .sorted()
-
-                val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, courseNames)
-                (filterEditText as? AutoCompleteTextView)?.setAdapter(adapter)
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "Unable to load courses 🔌", Toast.LENGTH_SHORT).show()
-            }
-    }
-
-
 }
