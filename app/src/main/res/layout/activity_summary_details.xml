@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SummaryDetailsActivity"
-    android:background="@color/gray_bg">
+    android:background="@color/thinksync_background"
+    android:padding="24dp">
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -25,40 +26,46 @@
                 android:layout_height="wrap_content"
                 android:text="Summary Title"
                 android:textStyle="bold"
-                android:textSize="16sp" />
+                android:textSize="18sp"
+                android:textColor="@color/thinksync_dark_text" />
 
             <TextView
                 android:id="@+id/item_summary_TV_Course"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Course Name" />
+                android:text="Course Name"
+                android:textColor="@color/thinksync_dark_text" />
 
             <TextView
                 android:id="@+id/item_summary_TV_Lecturer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Lecturer Name" />
+                android:text="Lecturer Name"
+                android:textColor="@color/thinksync_dark_text" />
 
             <Button
                 android:id="@+id/item_summary_BTN_Open"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="📄 Open PDF"
-                android:layout_marginTop="16dp" />
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/thinksync_blue"
+                android:textColor="@color/white" />
 
             <Button
                 android:id="@+id/btn_write_review"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="📝 Write review" />
-
+                android:text="📝 Write review"
+                android:backgroundTint="@color/thinksync_purple"
+                android:textColor="@color/white" />
 
             <FrameLayout
                 android:id="@+id/pdfContainer"
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
-                android:layout_marginTop="16dp"/>
+                android:layout_marginTop="16dp" />
 
             <LinearLayout
                 android:id="@+id/reviewContainer"
@@ -77,5 +84,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         app:menu="@menu/bottom_nav_menu"
-        android:background="@color/gray_bg" />
+        android:background="@color/thinksync_background"
+        app:itemIconTint="@color/thinksync_accent"
+        app:itemTextColor="@color/thinksync_accent" />
 </RelativeLayout>

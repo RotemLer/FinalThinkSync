@@ -3,4 +3,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray_bg">#E6E7EC</color>
+
+    <color name="thinksync_background">#f2f2f5</color>
+    <color name="thinksync_dark_text">#141527</color>
+    <color name="thinksync_purple">#8b5cf6</color>
+    <color name="thinksync_blue">#3b82f6</color>
+    <color name="thinksync_accent">#5a6cf2</color>
 </resources>

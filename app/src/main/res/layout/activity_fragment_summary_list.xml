@@ -5,57 +5,61 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    tools:context=".FragmentSummaryListActivity"
-    android:background="@color/gray_bg">
+    android:padding="24dp"
+    android:background="@color/thinksync_background"
+    tools:context=".FragmentSummaryListActivity">
 
     <TextView
         android:id="@+id/summary_list_TV_Welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_user"
+        android:text="Hello, User"
         android:textStyle="bold"
-        android:textSize="18sp"
+        android:textSize="22sp"
+        android:textColor="@color/thinksync_dark_text"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginBottom="12dp" />
 
     <Spinner
         android:id="@+id/spinner_filter_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/summary_list_TV_Welcome"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="12dp"
+        android:backgroundTint="@color/thinksync_accent" />
 
     <AutoCompleteTextView
         android:id="@+id/summary_list_ET_FilterValue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Select value"
-        android:inputType="none"
+        android:hint="Select a value"
+        android:backgroundTint="@color/thinksync_accent"
+        android:textColor="@color/thinksync_dark_text"
+        android:textSize="16sp"
+        android:layout_below="@id/spinner_filter_type"
+        android:layout_marginBottom="16dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:clickable="true"
-        android:layout_below="@id/spinner_filter_type"
-        android:layout_marginBottom="8dp"/>
+        android:inputType="none" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/summary_list_RV_Summaries"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_below="@id/summary_list_ET_FilterValue"
         android:layout_above="@id/bottom_navigation"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:drawableEnd="@android:drawable/arrow_down_float" />
+        android:layout_alignParentEnd="true" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@color/thinksync_background"
         app:menu="@menu/bottom_nav_menu"
-        android:background="@color/gray_bg" />
+        app:itemIconTint="@color/thinksync_accent"
+        app:itemTextColor="@color/thinksync_accent" />
 
 </RelativeLayout>

@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:padding="24dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:background="@color/gray_bg">
+    android:background="@color/thinksync_background">
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -13,31 +13,47 @@
         android:orientation="vertical"
         android:gravity="center_horizontal"
         android:padding="16dp">
+
         <EditText
             android:id="@+id/register_TEXT_Email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/email" />
+            android:hint="Email"
+            android:backgroundTint="@color/thinksync_accent"
+            android:textColor="@color/thinksync_dark_text"
+            android:textSize="16sp"
+            android:layout_marginBottom="12dp"/>
 
         <EditText
             android:id="@+id/register_TEXT_Password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/password"
-            android:inputType="textPassword" />
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:backgroundTint="@color/thinksync_accent"
+            android:textColor="@color/thinksync_dark_text"
+            android:textSize="16sp"
+            android:layout_marginBottom="12dp"/>
 
         <EditText
             android:id="@+id/register_TEXT_ConfirmPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/confirm_password"
-            android:inputType="textPassword" />
+            android:hint="Confirm Password"
+            android:inputType="textPassword"
+            android:backgroundTint="@color/thinksync_accent"
+            android:textColor="@color/thinksync_dark_text"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp"/>
 
         <Button
             android:id="@+id/register_BTN_Register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/register"
-            android:layout_marginTop="16dp" />
+            android:text="Register"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/thinksync_purple"
+            android:textColor="@color/white"
+            android:layout_marginTop="8dp"/>
     </LinearLayout>
 </RelativeLayout>
