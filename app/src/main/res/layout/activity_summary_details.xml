@@ -1,24 +1,21 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SummaryDetailsActivity"
+    android:orientation="vertical"
     android:background="@color/thinksync_background"
     android:padding="24dp">
 
     <ScrollView
-        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/bottom_navigation">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/item_summary_TV_Title"
@@ -52,39 +49,51 @@
                 android:backgroundTint="@color/thinksync_blue"
                 android:textColor="@color/white" />
 
+        </LinearLayout>
+    </ScrollView>
+
+    <FrameLayout
+        android:id="@+id/pdfContainer"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_marginBottom="16dp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:layout_marginBottom="24dp">
+
             <Button
                 android:id="@+id/btn_write_review"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:text="📝 Write review"
+                android:layout_marginBottom="16dp"
                 android:backgroundTint="@color/thinksync_purple"
                 android:textColor="@color/white" />
-
-            <FrameLayout
-                android:id="@+id/pdfContainer"
-                android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:layout_marginTop="16dp" />
 
             <LinearLayout
                 android:id="@+id/reviewContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="24dp"
-                android:padding="8dp" />
+                android:orientation="vertical" />
         </LinearLayout>
+
     </ScrollView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         app:menu="@menu/bottom_nav_menu"
         android:background="@color/thinksync_background"
         app:itemIconTint="@color/thinksync_accent"
         app:itemTextColor="@color/thinksync_accent" />
-</RelativeLayout>
+</LinearLayout>

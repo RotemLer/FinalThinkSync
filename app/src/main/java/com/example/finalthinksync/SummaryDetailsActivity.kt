@@ -7,9 +7,15 @@ import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.github.barteksc.pdfviewer.PDFView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.android.volley.toolbox.Volley
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.NetworkResponse
 
 class SummaryDetailsActivity : AppCompatActivity() {
 
@@ -23,7 +29,6 @@ class SummaryDetailsActivity : AppCompatActivity() {
         val openPdfButton = findViewById<Button>(R.id.item_summary_BTN_Open)
         val pdfContainer = findViewById<FrameLayout>(R.id.pdfContainer)
         val btnReview = findViewById<Button>(R.id.btn_write_review)
-
 
         val summaryId = intent.getStringExtra("summaryId") ?: ""
         val uploaderUid = intent.getStringExtra("uploaderUid") ?: ""
@@ -39,7 +44,6 @@ class SummaryDetailsActivity : AppCompatActivity() {
             .document(userId)
             .collection("saved_summaries")
             .document(summaryId)
-
 
         titleText.text = title
         courseText.text = course
@@ -64,6 +68,27 @@ class SummaryDetailsActivity : AppCompatActivity() {
             }
         }
 
+        // ✅ Load PDF directly in app using PDFView
+        if (!pdfUrl.isNullOrEmpty()) {
+            val pdfView = PDFView(this, null)
+            pdfContainer.addView(pdfView)
+
+            val pdfRequest = ByteRequest(
+                Request.Method.GET, pdfUrl,
+                { bytes ->
+                    pdfView.fromBytes(bytes)
+                        .enableSwipe(true)
+                        .swipeHorizontal(false)
+                        .enableDoubletap(true)
+                        .load()
+                },
+                { error ->
+                    Toast.makeText(this, "Failed to load PDF", Toast.LENGTH_SHORT).show()
+                }
+            )
+            Volley.newRequestQueue(this).add(pdfRequest)
+        }
+
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
@@ -86,7 +111,6 @@ class SummaryDetailsActivity : AppCompatActivity() {
         btnReview.setOnClickListener {
             showReviewDialog(summaryId)
         }
-
 
         // ✅ Load all reviews dynamically
         val reviewContainer = findViewById<LinearLayout>(R.id.reviewContainer)
@@ -188,5 +212,22 @@ class SummaryDetailsActivity : AppCompatActivity() {
             }
             .setNegativeButton("Cancel", null)
             .show()
+    }
+}
+
+// ✅ Custom request to get PDF bytes from URL using Volley
+class ByteRequest(
+    method: Int,
+    url: String,
+    private val listener: (ByteArray) -> Unit,
+    errorListener: Response.ErrorListener
+) : com.android.volley.Request<ByteArray>(method, url, errorListener) {
+
+    override fun parseNetworkResponse(response: NetworkResponse): Response<ByteArray> {
+        return Response.success(response.data, null)
+    }
+
+    override fun deliverResponse(response: ByteArray) {
+        listener(response)
     }
 }
