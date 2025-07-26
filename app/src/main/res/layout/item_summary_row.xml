@@ -2,7 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="16dp"
-    android:background="@color/thinksync_background"
+    android:background="@color/background"
     android:layout_marginBottom="8dp"
     android:id="@+id/item_summary_main">
 
@@ -13,7 +13,7 @@
         android:text="Summary Title"
         android:textStyle="bold"
         android:textSize="18sp"
-        android:textColor="@color/thinksync_dark_text" />
+        android:textColor="@color/dark_text" />
 
     <TextView
         android:id="@+id/item_summary_TV_Course"
@@ -22,7 +22,7 @@
         android:layout_below="@id/item_summary_TV_Title"
         android:layout_marginTop="4dp"
         android:text="Course Name"
-        android:textColor="@color/thinksync_dark_text" />
+        android:textColor="@color/dark_text" />
 
     <TextView
         android:id="@+id/item_summary_TV_Lecturer"
@@ -31,7 +31,7 @@
         android:layout_below="@id/item_summary_TV_Course"
         android:layout_marginTop="2dp"
         android:text="Lecturer Name"
-        android:textColor="@color/thinksync_dark_text" />
+        android:textColor="@color/dark_text" />
 
     <Button
         android:id="@+id/item_summary_BTN_Save"
@@ -40,7 +40,7 @@
         android:layout_below="@id/item_summary_TV_Lecturer"
         android:layout_marginTop="8dp"
         android:text="💾 Save"
-        android:backgroundTint="@color/thinksync_blue"
+        android:backgroundTint="@color/blue500"
         android:textColor="@color/white" />
 
     <TextView
@@ -52,5 +52,5 @@
         android:textSize="14sp"
         android:paddingTop="8dp"
         android:visibility="gone"
-        android:textColor="@color/thinksync_dark_text" />
+        android:textColor="@color/dark_text" />
 </RelativeLayout>

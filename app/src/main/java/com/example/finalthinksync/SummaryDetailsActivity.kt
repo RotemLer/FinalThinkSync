@@ -12,7 +12,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.android.volley.toolbox.Volley
-import com.android.volley.toolbox.StringRequest
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.NetworkResponse
@@ -68,7 +67,6 @@ class SummaryDetailsActivity : AppCompatActivity() {
             }
         }
 
-        // ✅ Load PDF directly in app using PDFView
         if (!pdfUrl.isNullOrEmpty()) {
             val pdfView = PDFView(this, null)
             pdfContainer.addView(pdfView)
@@ -112,7 +110,6 @@ class SummaryDetailsActivity : AppCompatActivity() {
             showReviewDialog(summaryId)
         }
 
-        // ✅ Load all reviews dynamically
         val reviewContainer = findViewById<LinearLayout>(R.id.reviewContainer)
 
         FirebaseFirestore.getInstance()
@@ -167,11 +164,9 @@ class SummaryDetailsActivity : AppCompatActivity() {
                                 }
                             }
                         }
-
                         reviewLayout.addView(replyInput)
                         reviewLayout.addView(sendReplyBtn)
                     }
-
                     reviewContainer.addView(reviewLayout)
                 }
             }
@@ -188,7 +183,6 @@ class SummaryDetailsActivity : AppCompatActivity() {
             .setPositiveButton("Send") { _, _ ->
                 val reviewText = editText.text.toString()
                 val rating = ratingBar.rating.toInt()
-
                 val user = FirebaseAuth.getInstance().currentUser
                 val review = Review(
                     userId = user?.uid ?: "",
@@ -215,7 +209,6 @@ class SummaryDetailsActivity : AppCompatActivity() {
     }
 }
 
-// ✅ Custom request to get PDF bytes from URL using Volley
 class ByteRequest(
     method: Int,
     url: String,

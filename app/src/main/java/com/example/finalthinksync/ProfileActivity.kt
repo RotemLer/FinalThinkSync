@@ -14,7 +14,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -141,8 +140,6 @@ class ProfileActivity : AppCompatActivity() {
             }
     }
 
-
-
     private fun loadSavedSummaries(uid: String) {
         val userRef = db.collection("users").document(uid)
         userRef.get().addOnSuccessListener { document ->
@@ -187,7 +184,5 @@ class ProfileActivity : AppCompatActivity() {
             Log.e("FirestoreError", "Failed to load user data: ${e.message}")
         }
     }
-
-
 
 }

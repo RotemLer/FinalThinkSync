@@ -3,7 +3,7 @@
     android:padding="20dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/thinksync_background">
+    android:background="@color/background">
 
     <RatingBar
         android:id="@+id/ratingBar"
@@ -19,6 +19,6 @@
         android:hint="Write your review here"
         android:inputType="textMultiLine"
         android:minLines="3"
-        android:backgroundTint="@color/thinksync_accent"
-        android:textColor="@color/thinksync_dark_text" />
+        android:backgroundTint="@color/accent200"
+        android:textColor="@color/dark_text" />
 </LinearLayout>

@@ -21,6 +21,7 @@ class LoginActivity : AppCompatActivity() {
         val emailEditText = findViewById<EditText>(R.id.login_TEXT_Email)
         val passwordEditText = findViewById<EditText>(R.id.login_TEXT_Password)
         val loginButton = findViewById<Button>(R.id.login_BTN_Login)
+        val backButton = findViewById<Button>(R.id.login_BTN_Back)
 
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString()
@@ -34,14 +35,19 @@ class LoginActivity : AppCompatActivity() {
             auth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener {
                     Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
-                    Log.d("DEBUG", "✅ התחברות הצליחה. UID: ${FirebaseAuth.getInstance().currentUser?.uid}")
+                    Log.d("DEBUG", "Login successfully. UID: ${FirebaseAuth.getInstance().currentUser?.uid}")
 
-                    startActivity(Intent(this, FragmentSummaryListActivity::class.java)) // החלף אם צריך
+                    startActivity(Intent(this, FragmentSummaryListActivity::class.java))
                     finish()
                 }
                 .addOnFailureListener { error ->
                     Toast.makeText(this, "Login failed: ${error.message}", Toast.LENGTH_LONG).show()
                 }
+        }
+
+        backButton.setOnClickListener {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
     }
 }

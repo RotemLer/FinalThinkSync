@@ -21,6 +21,7 @@ class RegisterActivity : AppCompatActivity() {
         val passwordEditText = findViewById<EditText>(R.id.register_TEXT_Password)
         val confirmPasswordEditText = findViewById<EditText>(R.id.register_TEXT_ConfirmPassword)
         val registerButton = findViewById<Button>(R.id.register_BTN_Register)
+        val backButton = findViewById<Button>(R.id.register_BTN_Back)
 
         registerButton.setOnClickListener {
             val email = emailEditText.text.toString()
@@ -40,14 +41,17 @@ class RegisterActivity : AppCompatActivity() {
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener {
                     Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
-
-                    // ✅ מעבירים ישר למסך הסיכומים
                     startActivity(Intent(this, FragmentSummaryListActivity::class.java))
                     finish()
                 }
                 .addOnFailureListener { error ->
                     Toast.makeText(this, "Registration failed: ${error.message}", Toast.LENGTH_LONG).show()
                 }
+        }
+
+        backButton.setOnClickListener {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
     }
 }

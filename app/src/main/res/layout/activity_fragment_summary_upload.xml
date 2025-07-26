@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FragmentSummaryUploadActivity"
-    android:background="@color/thinksync_background"
+    android:background="@color/background"
     android:padding="24dp">
 
     <LinearLayout
@@ -23,18 +23,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Title"
-            android:backgroundTint="@color/thinksync_accent"
-            android:textColor="@color/thinksync_dark_text"
+            android:backgroundTint="@color/accent200"
+            android:textColor="@color/dark_text"
             android:textSize="16sp"
-            android:layout_marginBottom="12dp" />
+            android:layout_marginBottom="@dimen/default_margin" />
 
         <EditText
             android:id="@+id/summary_upload_TEXT_Course"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Course"
-            android:backgroundTint="@color/thinksync_accent"
-            android:textColor="@color/thinksync_dark_text"
+            android:backgroundTint="@color/accent200"
+            android:textColor="@color/dark_text"
             android:textSize="16sp"
             android:layout_marginBottom="12dp" />
 
@@ -43,10 +43,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Lecturer"
-            android:backgroundTint="@color/thinksync_accent"
-            android:textColor="@color/thinksync_dark_text"
+            android:backgroundTint="@color/accent200"
+            android:textColor="@color/dark_text"
             android:textSize="16sp"
-            android:layout_marginBottom="12dp" />
+            android:layout_marginBottom="@dimen/default_margin" />
 
         <EditText
             android:id="@+id/summary_upload_TEXT_Year"
@@ -54,8 +54,8 @@
             android:layout_height="wrap_content"
             android:hint="Year"
             android:inputType="number"
-            android:backgroundTint="@color/thinksync_accent"
-            android:textColor="@color/thinksync_dark_text"
+            android:backgroundTint="@color/accent200"
+            android:textColor="@color/dark_text"
             android:textSize="16sp"
             android:layout_marginBottom="16dp" />
 
@@ -66,7 +66,7 @@
             android:text="Choose PDF File"
             android:textAllCaps="false"
             app:cornerRadius="16dp"
-            app:backgroundTint="@color/thinksync_purple"
+            app:backgroundTint="@color/purple300"
             android:textColor="@color/white"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp" />
@@ -79,9 +79,9 @@
         android:text="Upload Summary"
         android:textAllCaps="false"
         app:cornerRadius="16dp"
-        app:backgroundTint="@color/thinksync_blue"
+        app:backgroundTint="@color/blue500"
         android:textColor="@color/white"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="@dimen/default_margin"
         android:layout_above="@id/bottom_navigation" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -90,8 +90,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         app:menu="@menu/bottom_nav_menu"
-        android:background="@color/thinksync_background"
-        app:itemIconTint="@color/thinksync_accent"
-        app:itemTextColor="@color/thinksync_accent" />
+        android:background="@color/background"
+        app:itemIconTint="@color/accent200"
+        app:itemTextColor="@color/accent200" />
 
 </RelativeLayout>

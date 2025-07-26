@@ -6,12 +6,10 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.firestore.Query
 
 
 class FragmentSummaryUploadActivity : AppCompatActivity() {
@@ -31,8 +29,6 @@ class FragmentSummaryUploadActivity : AppCompatActivity() {
         val yearEditText = findViewById<EditText>(R.id.summary_upload_TEXT_Year)
         val uploadButton = findViewById<Button>(R.id.summary_upload_BTN_Upload)
         val choosePdfButton = findViewById<Button>(R.id.summary_upload_BTN_PDF)
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        val uploaderUid = currentUser?.uid ?: ""
 
         choosePdfButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
@@ -115,9 +111,6 @@ class FragmentSummaryUploadActivity : AppCompatActivity() {
             }
         }
 
-
-
-
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomNav.selectedItemId = R.id.nav_upload
         bottomNav.setOnItemSelectedListener { item ->
@@ -168,7 +161,5 @@ class FragmentSummaryUploadActivity : AppCompatActivity() {
             Log.e("UploadDebug", "File not selected or cancelled")
         }
     }
-
-
 
 }

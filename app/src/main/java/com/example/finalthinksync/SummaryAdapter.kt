@@ -1,7 +1,6 @@
 package com.example.finalthinksync
 
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
 
 class SummaryAdapter(private val showSaveButton: Boolean = true) :
     ListAdapter<Summary, SummaryAdapter.SummaryViewHolder>(SummaryDiffCallback()) {
@@ -72,12 +70,23 @@ class SummaryAdapter(private val showSaveButton: Boolean = true) :
                     .collection("users").document(currentUser.uid)
 
                 userRef.get().addOnSuccessListener { doc ->
-                    val savedList = doc.get("savedSummaries") as? List<*>
-                    val alreadySaved = savedList?.contains(summary.id) == true
+                    if (!doc.exists()) {
+                        userRef.set(mapOf("savedSummaries" to listOf<String>()))
+                            .addOnSuccessListener {
+                                holder.saveButton.performClick() // לוחץ שוב כדי לשמור מיד
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(holder.itemView.context, "Error initializing user", Toast.LENGTH_SHORT).show()
+                            }
+                        return@addOnSuccessListener
+                    }
+
+                    val savedList = doc.get("savedSummaries") as? List<*> ?: listOf<Any>()
+                    val alreadySaved = savedList.contains(summary.id)
 
                     if (alreadySaved) {
                         holder.saveButton.text = "✔️ Saved"
-                        holder.saveButton.isEnabled = true // ← חשוב לא לאפס לחיצה
+                        holder.saveButton.isEnabled = true
                         holder.saveButton.setOnClickListener {
                             userRef.update("savedSummaries", FieldValue.arrayRemove(summary.id))
                                 .addOnSuccessListener {
@@ -107,8 +116,8 @@ class SummaryAdapter(private val showSaveButton: Boolean = true) :
         } else {
             holder.saveButton.visibility = View.GONE
         }
-
     }
+
 }
 
 class SummaryDiffCallback : DiffUtil.ItemCallback<Summary>() {

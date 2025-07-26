@@ -20,7 +20,6 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
 
-        val logoImage = findViewById<ImageView>(R.id.main_ING_logo)
         val loginButton = findViewById<Button>(R.id.main_BTN_Login)
         val registerButton = findViewById<Button>(R.id.main_BTN_Register)
 

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:background="@color/thinksync_background">
+    android:background="@color/background">
 
     <ImageView
         android:id="@+id/main_ING_logo"
@@ -23,7 +23,7 @@
         android:textAllCaps="false"
         android:layout_below="@id/main_ING_logo"
         android:layout_marginTop="24dp"
-        android:backgroundTint="@color/thinksync_blue"
+        android:backgroundTint="@color/blue500"
         android:textColor="@color/white" />
 
     <Button
@@ -33,7 +33,7 @@
         android:text="Register"
         android:textAllCaps="false"
         android:layout_below="@id/main_BTN_Login"
-        android:layout_marginTop="12dp"
-        android:backgroundTint="@color/thinksync_purple"
+        android:layout_marginTop="@dimen/default_margin"
+        android:backgroundTint="@color/purple300"
         android:textColor="@color/white" />
 </RelativeLayout>
