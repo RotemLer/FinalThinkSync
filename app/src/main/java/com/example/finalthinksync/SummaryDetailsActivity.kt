@@ -15,6 +15,8 @@ import com.android.volley.toolbox.Volley
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.NetworkResponse
+import com.example.finalthinksync.utils.NotificationManager
+
 
 class SummaryDetailsActivity : AppCompatActivity() {
 
@@ -47,6 +49,7 @@ class SummaryDetailsActivity : AppCompatActivity() {
         titleText.text = title
         courseText.text = course
         lecturerText.text = lecturer
+        Log.d("NOTIF_DEBUG", "Uploader UID from intent: $uploaderUid")
 
         openPdfButton.setOnClickListener {
             if (!pdfUrl.isNullOrEmpty()) {
@@ -107,8 +110,9 @@ class SummaryDetailsActivity : AppCompatActivity() {
         }
 
         btnReview.setOnClickListener {
-            showReviewDialog(summaryId)
+            showReviewDialog(summaryId, uploaderUid, title)
         }
+
 
         val reviewContainer = findViewById<LinearLayout>(R.id.reviewContainer)
 
@@ -172,7 +176,7 @@ class SummaryDetailsActivity : AppCompatActivity() {
             }
     }
 
-    private fun showReviewDialog(summaryId: String) {
+    private fun showReviewDialog(summaryId: String, uploaderUid: String, title: String) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_write_review, null)
         val editText = dialogView.findViewById<EditText>(R.id.reviewEditText)
         val ratingBar = dialogView.findViewById<RatingBar>(R.id.ratingBar)
@@ -199,7 +203,29 @@ class SummaryDetailsActivity : AppCompatActivity() {
                     .addOnSuccessListener {
                         Toast.makeText(this, "Review saved", Toast.LENGTH_SHORT).show()
                         recreate()
+
+                        val notificationData = mapOf(
+                            "action" to "commented on your summery",
+                            "actorName" to (user?.email ?: "someonr"),
+                            "summaryTitle" to title,
+                            "route" to "summary/$summaryId"
+                        )
+
+                        Log.d("NOTIF_DEBUG", "Trying to send notification to $uploaderUid")
+
+                        NotificationManager.createNotification(
+                            toUserId = uploaderUid,
+                            data = notificationData
+                        ) { success ->
+                            if (success) {
+                                Log.d("NOTIF_DEBUG", "Notification added successfully to Firestore.")
+                            } else {
+                                Log.e("NOTIF_DEBUG", "Failed to add notification to Firestore.")
+                            }
+                        }
+
                     }
+
                     .addOnFailureListener {
                         Toast.makeText(this, "Error sending review", Toast.LENGTH_SHORT).show()
                     }

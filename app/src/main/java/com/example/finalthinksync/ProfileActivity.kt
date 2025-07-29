@@ -3,9 +3,8 @@ package com.example.finalthinksync
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +15,7 @@ import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 
 class ProfileActivity : AppCompatActivity() {
+
     private lateinit var auth: FirebaseAuth
     private lateinit var uploadedRecyclerView: RecyclerView
     private lateinit var savedRecyclerView: RecyclerView
@@ -53,13 +53,17 @@ class ProfileActivity : AppCompatActivity() {
         savedRecyclerView.addItemDecoration(
             DividerItemDecoration(this, LinearLayoutManager.VERTICAL)
         )
-        Log.d("Debug", "Current UID: $userUid")
 
         if (userUid != null) {
-            Log.d("Debug", "Calling loadUploadedSummaries with UID: $userUid")
             loadUploadedSummaries(userUid)
-            Log.d("Debug", "Calling loadSavedSummaries with UID: $userUid")
             loadSavedSummaries(userUid)
+
+            val bellIcon = findViewById<ImageView>(R.id.profile_IMG_Bell)
+            bellIcon.setOnClickListener {
+                startActivity(Intent(this, NotificationsActivity::class.java))
+            }
+
+            checkUnreadNotifications()
         } else {
             Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
         }
@@ -82,15 +86,38 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        checkUnreadNotifications()
+    }
+
+    private fun checkUnreadNotifications() {
+        val badgeText = findViewById<TextView>(R.id.profile_TEXT_Badge)
+        val userUid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        FirebaseFirestore.getInstance()
+            .collection("users")
+            .document(userUid)
+            .collection("notifications")
+            .whereEqualTo("isRead", false)
+            .get()
+            .addOnSuccessListener { result ->
+                val count = result.size()
+                if (count > 0) {
+                    badgeText.text = count.toString()
+                    badgeText.visibility = View.VISIBLE
+                } else {
+                    badgeText.visibility = View.GONE
+                }
+            }
+    }
+
     private fun loadUploadedSummaries(uid: String) {
         db.collection("summaries")
             .whereEqualTo("uploaderUid", uid)
             .get()
             .addOnSuccessListener { result ->
-                Log.d("Debug", "Found ${result.size()} summaries")
-
                 val summaries = mutableListOf<Summary>()
-
                 for (doc in result) {
                     val timestampObj = doc.getTimestamp("timestamp")
                     val timestampLong = timestampObj?.seconds ?: 0L
@@ -113,18 +140,14 @@ class ProfileActivity : AppCompatActivity() {
                         .addOnSuccessListener { reviewDocs ->
                             val reviewList = reviewDocs.mapNotNull { it.toObject(Review::class.java) }
                             summary.reviews = reviewList
-
-                            Log.d("Debug", "Loaded ${reviewList.size} reviews for ${summary.title}")
                             summaries.add(summary)
-
                             if (summaries.size == result.size()) {
                                 val adapter = SummaryAdapter(showSaveButton = false)
                                 uploadedRecyclerView.adapter = adapter
                                 adapter.submitList(summaries)
                             }
                         }
-                        .addOnFailureListener { e ->
-                            Log.e("FirestoreError", "Failed to load reviews for ${summary.id}: ${e.message}")
+                        .addOnFailureListener {
                             summaries.add(summary)
                             if (summaries.size == result.size()) {
                                 val adapter = SummaryAdapter(showSaveButton = false)
@@ -134,8 +157,7 @@ class ProfileActivity : AppCompatActivity() {
                         }
                 }
             }
-            .addOnFailureListener { e ->
-                Log.e("FirestoreError", "Failed to load uploaded summaries: ${e.message}")
+            .addOnFailureListener {
                 Toast.makeText(this, "Failed to load uploaded summaries", Toast.LENGTH_SHORT).show()
             }
     }
@@ -176,13 +198,11 @@ class ProfileActivity : AppCompatActivity() {
                     savedRecyclerView.adapter = adapter
                     adapter.submitList(savedSummaries)
                 }
-                .addOnFailureListener { e ->
-                    Log.e("FirestoreError", "Failed to load saved summaries: ${e.message}")
+                .addOnFailureListener {
                     Toast.makeText(this, "Failed to load saved summaries", Toast.LENGTH_SHORT).show()
                 }
-        }.addOnFailureListener { e ->
-            Log.e("FirestoreError", "Failed to load user data: ${e.message}")
+        }.addOnFailureListener {
+            Toast.makeText(this, "Failed to load user data", Toast.LENGTH_SHORT).show()
         }
     }
-
 }

@@ -1,6 +1,7 @@
 package com.example.finalthinksync
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.example.finalthinksync.utils.NotificationManager
+
 
 class SummaryAdapter(private val showSaveButton: Boolean = true) :
     ListAdapter<Summary, SummaryAdapter.SummaryViewHolder>(SummaryDiffCallback()) {
@@ -73,7 +76,7 @@ class SummaryAdapter(private val showSaveButton: Boolean = true) :
                     if (!doc.exists()) {
                         userRef.set(mapOf("savedSummaries" to listOf<String>()))
                             .addOnSuccessListener {
-                                holder.saveButton.performClick() // לוחץ שוב כדי לשמור מיד
+                                holder.saveButton.performClick()
                             }
                             .addOnFailureListener {
                                 Toast.makeText(holder.itemView.context, "Error initializing user", Toast.LENGTH_SHORT).show()
@@ -105,11 +108,39 @@ class SummaryAdapter(private val showSaveButton: Boolean = true) :
                                 .addOnSuccessListener {
                                     Toast.makeText(holder.itemView.context, "Saved successfully", Toast.LENGTH_SHORT).show()
                                     holder.saveButton.text = "✔️ Saved"
+
+                                    val currentUser = FirebaseAuth.getInstance().currentUser
+
+                                    if (summary.uploaderUid != currentUser?.uid) {
+                                        val notificationData = mapOf(
+                                            "action" to "saved your summary",
+                                            "actorName" to (currentUser?.email ?: "user"),
+                                            "summaryTitle" to summary.title,
+                                            "summaryId" to summary.id,
+                                            "route" to "summary/${summary.id}",
+                                            "type" to "save",
+                                            "message" to "${currentUser?.email ?: "someone"} saved summary '${summary.title}'"
+                                        )
+                                        Log.d("NOTIF_DEBUG", "🔔 Attempting to notify ${summary.uploaderUid}")
+
+                                        NotificationManager.createNotification(
+                                            toUserId = summary.uploaderUid,
+                                            data = notificationData
+                                        ) { success ->
+                                            if (success) {
+                                                Log.d("NOTIF_DEBUG", "SAVE notification sent.")
+                                            } else {
+                                                Log.e("NOTIF_DEBUG", "SAVE notification failed.")
+                                            }
+                                        }
+                                    }
+
                                 }
                                 .addOnFailureListener {
                                     Toast.makeText(holder.itemView.context, "Error saving", Toast.LENGTH_SHORT).show()
                                 }
                         }
+
                     }
                 }
             }
