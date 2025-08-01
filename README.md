@@ -49,8 +49,9 @@ To run the project locally on Android Studio:
 ---
 
 ## 📸 Screenshots & Video
-<img width="1735" height="668" alt="ThinkSync2" src="https://github.com/user-attachments/assets/fe90775c-3874-496c-8c78-cae239d56f88" />
 <img width="1722" height="668" alt="ThinkSync1" src="https://github.com/user-attachments/assets/1be4cc01-6cd3-4a58-b3e4-0bc9dcafaebd" />
+
+<img width="1735" height="668" alt="ThinkSync2" src="https://github.com/user-attachments/assets/fe90775c-3874-496c-8c78-cae239d56f88" />
 
 https://github.com/user-attachments/assets/90ed2950-a0d3-4db2-b5c1-66a07b824df0
 
