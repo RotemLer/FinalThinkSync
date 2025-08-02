@@ -77,5 +77,5 @@ To run the project locally on Android Studio:
 
 <img width="602" height="381" alt="image" src="https://github.com/user-attachments/assets/849e4664-9172-4f74-b09a-bc10abdf844a" />
 
-🎥 [Watch the video demo](https://github.com/user-attachments/assets/90ed2950-a0d3-4db2-b5c1-66a07b824df0)
+https://github.com/user-attachments/assets/90ed2950-a0d3-4db2-b5c1-66a07b824df0
 
