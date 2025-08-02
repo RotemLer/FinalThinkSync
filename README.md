@@ -36,6 +36,22 @@ To run the project locally on Android Studio:
 
 ---
 
+## 🛠 Tech Stack Summary
+
+- **Language**: Kotlin
+- **Architecture**: Clean separation between data logic and UI components (Firebase logic handled outside of Activities)
+- **UI**: Material Design, RecyclerView, BottomNavigationView, ViewBinding
+- **Firebase Services**:
+  - Authentication – for secure login and signup
+  - Firestore – to store summaries, users, reviews, notifications
+  - Storage – for uploading and retrieving PDF files
+- **Libraries**:
+  - PDFView – to display PDF documents
+  - ViewBinding – for safe UI interactions
+
+
+---
+
 ## 📱 Screens Overview
 
 | Screen / Activity         | Description                                                                 | Firebase / APIs              | Libraries / Components              |
@@ -51,20 +67,6 @@ To run the project locally on Android Studio:
 | **NotificationsActivity** | Lists real-time user notifications.                                        | Firestore                    | LinearLayout                        |
 | **ReviewsSection**        | Review system inside summary details.                                      | Firestore                    | RecyclerView                        |
 
----
-
-## 🛠 Tech Stack Summary
-
-- **Language**: Kotlin
-- **Architecture**: Clean separation between data logic and UI components (Firebase logic handled outside of Activities)
-- **UI**: Material Design, RecyclerView, BottomNavigationView, ViewBinding
-- **Firebase Services**:
-  - Authentication – for secure login and signup
-  - Firestore – to store summaries, users, reviews, notifications
-  - Storage – for uploading and retrieving PDF files
-- **Libraries**:
-  - PDFView – to display PDF documents
-  - ViewBinding – for safe UI interactions
 
 
 ---
