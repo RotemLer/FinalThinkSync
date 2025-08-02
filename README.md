@@ -17,18 +17,6 @@
 
 ---
 
-## 🛠️ Technologies Used
-
-- **Frontend**: Android (Kotlin), XML layout design, Jetpack libraries
-  - ViewBinding, RecyclerView, BottomNavigationView
-- **Backend**: Firebase services
-  - Firestore – NoSQL database for storing summaries, reviews, and metadata
-  - Firebase Authentication – Secure user login and registration
-  - Firebase Storage – Storing and retrieving PDF files
-- **Other Tools**: Volley for networking, PDFView for rendering documents
-
----
-
 ## 🧪 Getting Started
 
 To run the project locally on Android Studio:
@@ -48,13 +36,46 @@ To run the project locally on Android Studio:
 
 ---
 
+## 📱 Screens Overview
+
+| Screen / Activity         | Description                                                                 | Firebase / APIs              | Libraries / Components              |
+|--------------------------|-----------------------------------------------------------------------------|------------------------------|-------------------------------------|
+| **LoginActivity**         | Allows users to log in with email and password. Redirects to registration. | Firebase Auth                | Material Design                     |
+| **RegisterActivity**      | User registration with email, password, and profile setup.                 | Firebase Auth, Firestore     | Material Design                     |
+| **MainActivity**          | Home navigation between summaries, saved items, upload and profile tabs.  | Firestore                    | BottomNavigationView                |
+| **UploadSummaryActivity** | Upload PDF summaries with course, lecturer, and year.                      | Firebase Storage, Firestore  | File Picker                         |
+| **SummaryListFragment**   | Displays all summaries, filterable by course/year/lecturer.                | Firestore                    | RecyclerView                        |
+| **SummaryDetailsActivity**| Full summary info and PDF preview with review section.                     | Firestore                    | PDFView, Glide                      |
+| **SavedSummariesFragment**| Displays saved summaries by the user.                                      | Firestore                    | RecyclerView                        |
+| **ProfileActivity**       | User info and access to uploaded summaries.                                | Firestore                    | CardView                            |
+| **NotificationsActivity** | Lists real-time user notifications.                                        | Firestore                    | LinearLayout                        |
+| **ReviewsSection**        | Review system inside summary details.                                      | Firestore                    | RecyclerView                        |
+
+---
+
+## 🛠 Tech Stack Summary
+
+- **Language**: Kotlin
+- **Architecture**: Clean separation between data logic and UI components (Firebase logic handled outside of Activities)
+- **UI**: Material Design, RecyclerView, BottomNavigationView, ViewBinding
+- **Firebase Services**:
+  - Authentication – for secure login and signup
+  - Firestore – to store summaries, users, reviews, notifications
+  - Storage – for uploading and retrieving PDF files
+- **Libraries**:
+  - PDFView – to display PDF documents
+  - ViewBinding – for safe UI interactions
+
+
+---
+
 ## 📸 Screenshots & Video
+
 <img width="974" height="379" alt="image" src="https://github.com/user-attachments/assets/82ecd6a1-0d6a-489b-9377-ab6b1e85b768" />
 
 <img width="785" height="382" alt="image" src="https://github.com/user-attachments/assets/6b919a56-753e-4f38-a7cf-f237c5182106" />
 
 <img width="602" height="381" alt="image" src="https://github.com/user-attachments/assets/849e4664-9172-4f74-b09a-bc10abdf844a" />
 
-
-https://github.com/user-attachments/assets/90ed2950-a0d3-4db2-b5c1-66a07b824df0
+🎥 [Watch the video demo](https://github.com/user-attachments/assets/90ed2950-a0d3-4db2-b5c1-66a07b824df0)
 
