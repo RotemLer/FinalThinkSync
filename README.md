@@ -35,7 +35,7 @@ To run the project locally on Android Studio:
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-username/ThinkSync.git
+   git clone https://github.com/RotemLer/FinalThinkSync.git
    ```
 
 2. **Open the project** in **Android Studio**.
